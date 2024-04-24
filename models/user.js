@@ -1,8 +1,29 @@
 const mongoose = require("mongoose");
+const Thought = require("./thought");
+const emailRegex = "/^([a-z0-9_.-]+)@([da-z.-]+).([a-z.]{2,6})$/";
 
-const userModel = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
   username: { type: String, unique: true, required: true, trim: true },
-  email: { type: String, required: true, unique: true }, //needs email validation
-  thoughts: [],
-  friends: [],
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    match: [emailRegex, "Not a valid Email, Please try again"],
+  },
+  thoughts: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Thought",
+    },
+  ], //Array of _id values referencing the Thought model
+  friends: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ], //Array of _id values referencing the User model (self-reference)
 });
+
+const User = mongoose.model("User", userSchema);
+
+module.exports = User;
