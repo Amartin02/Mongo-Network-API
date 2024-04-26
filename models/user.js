@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const { Schema, model } = require("mongoose");
 const Thought = require("./thought");
 const emailRegex = "/^([a-z0-9_.-]+)@([da-z.-]+).([a-z.]{2,6})$/";
 
@@ -12,13 +12,13 @@ const userSchema = new mongoose.Schema({
   },
   thoughts: [
     {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "Thought",
     },
   ], //Array of _id values referencing the Thought model
   friends: [
     {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "User",
     },
   ], //Array of _id values referencing the User model (self-reference)
