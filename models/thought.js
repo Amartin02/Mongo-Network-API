@@ -1,6 +1,5 @@
 const { Schema, model } = require("mongoose");
-const reactionSchema = require("./Reaction");
-console.log(reactionSchema);
+const reactionSchema = require("./reaction");
 
 const thoughtSchema = new Schema({
   thoughtText: { type: String, required: true, minLength: 1, maxLength: 280 },

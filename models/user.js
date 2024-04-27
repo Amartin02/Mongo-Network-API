@@ -1,12 +1,13 @@
 const { Schema, model } = require("mongoose");
 const Thought = require("./thought");
-const emailRegex = "/^([a-z0-9_.-]+)@([da-z.-]+).([a-z.]{2,6})$/";
+const emailRegex = /^([a-z0-9_.-]+)@([da-z.-]+).([a-z.]{2,6})$/;
 
-const userSchema = new mongoose.Schema({
+const userSchema = Schema({
   username: { type: String, unique: true, required: true, trim: true },
   email: {
     type: String,
     required: true,
+    index: true,
     unique: true,
     match: [emailRegex, "Not a valid Email, Please try again"],
   },
@@ -24,6 +25,6 @@ const userSchema = new mongoose.Schema({
   ], //Array of _id values referencing the User model (self-reference)
 });
 
-const User = mongoose.model("User", userSchema);
+const User = model("User", userSchema);
 
 module.exports = User;
