@@ -33,6 +33,22 @@ router.post("/", async (req, res) => {
     res.status(500).json(err);
   }
 });
+
+//post for friends
+router.post("/:userId/friends", async (req, res) => {
+  try {
+    const findFriend = await User.findOne({ username: req.body.username });
+    const userData = await User.findOneAndUpdate(
+      { _id: req.params.userId },
+      { $addToSet: { friends: findFriend._id } },
+      { new: true }
+    );
+    res.status(200).json(userData);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 router.put("/:id", async (req, res) => {
   try {
     const user = await User.findOneAndUpdate(
@@ -47,9 +63,23 @@ router.put("/:id", async (req, res) => {
 
 router.delete("/:id", async (req, res) => {
   try {
-    const newUser = await User.destroy({
-      where: { id: req.params.id },
+    const newUser = await User.deleteOne({
+      _id: req.params.id,
     });
+    res.status(200).json("Deleted Successfully");
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+//delete for friends
+router.delete("/:userId/friends/:friendsId", async (req, res) => {
+  try {
+    const userData = await User.findOneAndUpdate(
+      { _id: req.params.userId },
+      { $pull: { friends: { friendsId: req.params.friendsId } } },
+      { new: true }
+    );
     res.status(200).json("Deleted Successfully");
   } catch (err) {
     res.status(500).json(err);

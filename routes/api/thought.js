@@ -21,6 +21,20 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+//post for reactions
+router.post("/:thoughtId/reaction", async (req, res) => {
+  try {
+    const thoughtData = await Thought.findOneAndUpdate(
+      { _id: req.params.thoughtId },
+      { $addToSet: { reactions: req.body } },
+      { new: true }
+    );
+    res.status(200).json(thoughtData);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 router.post("/", async (req, res) => {
   try {
     const thoughtData = await Thought.create(req.body);
@@ -37,7 +51,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.put("/", async (req, res) => {
+router.put("/:id", async (req, res) => {
   try {
     const thoughtData = await Thought.findOneAndUpdate(
       { _id: req.params.id },
@@ -49,14 +63,28 @@ router.put("/", async (req, res) => {
   }
 });
 
-router.delete("/", async (req, res) => {
+router.delete("/:id", async (req, res) => {
   try {
-    const thoughtData = await User.destroy({
-      where: { id: req.params.id },
+    const thoughtData = await User.deleteOne({
+      _id: req.params.id,
     });
     res.status(200).json("Deleted Successfully");
   } catch (err) {
     res.status(500).json(err);
+  }
+});
+
+//delete for reaction
+router.delete("/:thoughtId/reaction/:reactionId", async (req, res) => {
+  try {
+    const thoughtData = await Thought.findOneAndUpdate(
+      { _id: req.params.thoughtId },
+      { $pull: { reactions: { reactionId: req.params.reactionId } } },
+      { new: true }
+    );
+    res.status(200).json("Deleted Successfully");
+  } catch (err) {
+    console.log(err);
   }
 });
 
